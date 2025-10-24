@@ -1,23 +1,17 @@
 class Solution {
 public:
     int findNonMinOrMax(vector<int>& nums) {
-
         if (nums.size() < 3) return -1;
-        
-        int min_num = INT_MAX;
-        int max_num= INT_MIN;
 
-        for (int i:nums){
-            min_num = min(min_num, i);
-            max_num = max(max_num, i);
-        }
+        int a = nums[0];
+        int b = nums[1];
+        int c = nums[2];
 
-        if (min_num == max_num) return -1;
+        int sum = a+b+c;
 
-        for (int i:nums){
-            if (i != min_num && i != max_num) return i;
-        }
+        int mn = min(min(a, b), c);
+        int mx = max(max(a, b), c);
 
-        return -1;
+        return sum-mn-mx;
     }
 };
