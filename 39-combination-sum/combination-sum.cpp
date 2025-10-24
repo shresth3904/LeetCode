@@ -21,10 +21,7 @@ public:
     vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
         vector<vector<int>> res;
         vector<int> curr;
-        set<vector<int>> tracker;
-        vector<int> c(10, 0);
         gen(candidates, target, curr, res, 0);
-
         return res;
     }
 };
