@@ -1,12 +1,14 @@
 class Solution {
 public:
-    void gen(string digits, string curr, int i, vector<string>& res, vector<vector<char>>& comb){
+    void gen(string digits, string& curr, int i, vector<string>& res, vector<vector<char>>& comb){
         if (digits.size() == curr.size()){
             res.push_back(curr);
             return;
         }
         for (char c: comb[digits[i] - '2']){
-            gen(digits, curr + c, i+1, res, comb);
+            curr.push_back(c);
+            gen(digits, curr, i+1, res, comb);
+            curr.pop_back();
         }
     }
     vector<string> letterCombinations(string digits) {
@@ -22,7 +24,8 @@ public:
         };
 
         vector<string> res;
-        gen(digits, "", 0, res, comb);
+        string curr = "";
+        gen(digits, curr, 0, res, comb);
 
         return res;
         
