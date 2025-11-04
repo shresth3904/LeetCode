@@ -8,9 +8,9 @@ public:
 
         char temp = board[i][j];
         board[i][j] = '#';
-        bool res =  check(board, step+1, word, i+1, j)|
-                    check(board, step+1, word, i-1, j)|
-                    check(board, step+1, word, i, j+1)|
+        bool res =  check(board, step+1, word, i+1, j)||
+                    check(board, step+1, word, i-1, j)||
+                    check(board, step+1, word, i, j+1)||
                     check(board, step+1, word, i, j-1);
         board[i][j] = temp;
 
