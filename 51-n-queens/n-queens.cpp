@@ -1,5 +1,24 @@
 class Solution {
 public:
+    bool issafe(vector<string>& curr, int row, int col){
+        for (int i = 0; i < curr[0].size(); i++){
+            if (curr[row][i] == 'Q') return false;
+        }
+
+        for (int i = 0; i < curr.size(); i++){
+            if (curr[i][col] == 'Q') return false;
+        }
+
+        for (int i = row, j = col; i >= 0 && j >= 0; i--, j--){
+            if (curr[i][j] == 'Q') return false;
+        }
+
+        for (int i = row, j = col; i >= 0 && j < curr[0].size(); i--, j++){
+            if (curr[i][j] == 'Q') return false;
+        }
+
+        return true;
+    }
     void fillspace(vector<vector<int>>& mat, int x, int y, int op){
         for (int i = 0; i < mat.size(); i ++){
             for (int j = 0; j < mat[0].size(); j++){
@@ -19,11 +38,9 @@ public:
         }
         for (int i = start; i < mat.size(); i++){
             for (int j = 0; j < mat[0].size(); j++){
-                if (mat[i][j] == 0){
+                if (issafe(curr, i, j)){
                     curr[i][j] = 'Q';
-                    fillspace(mat, i, j, 1);
                     gen(i+1, res, curr, n, placed+1, mat);
-                    fillspace(mat, i, j, -1);
                     curr[i][j] = '.';
                 }
             }
