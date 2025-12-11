@@ -34,7 +34,6 @@ public:
         vector<string> output;
         string s = "";
         gen(num, 0, 0, 0, output, s, target);
-
         return output;
     }
 };
