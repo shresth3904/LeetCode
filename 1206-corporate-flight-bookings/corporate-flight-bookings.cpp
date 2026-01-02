@@ -2,10 +2,10 @@ class Solution {
 public:
     vector<int> corpFlightBookings(vector<vector<int>>& bookings, int n) {
         vector<int> res(n, 0);
+        for (int i = bookings.size()-1; i >= 0; i--){
 
-        for (auto book: bookings){
-            res[book[0]-1] += book[2];
-            if (book[1] < n) res[book[1]] -= book[2];
+            res[bookings[i][0]-1] += bookings[i][2];
+            if (bookings[i][1] < n) res[bookings[i][1]] -= bookings[i][2];
         }
 
         int sum = 0;
