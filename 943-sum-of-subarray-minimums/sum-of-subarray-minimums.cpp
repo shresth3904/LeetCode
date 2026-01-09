@@ -27,11 +27,7 @@ public:
 
         long long res = 0;
         for (int i = 0; i < n; i++){
-            long long left = i-PLE[i];
-            long long right = NLE[i] - i;
-            long long con = (left * right)%mod;
-            long long adder = (arr[i] * con)%mod;
-            res = (res+adder)%mod;
+            res = (res+ (long long)(i-PLE[i])*(NLE[i]-i)*arr[i])%mod;
         }
 
         return (int)(res);
