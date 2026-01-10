@@ -1,6 +1,6 @@
 class Solution {
 public:
-    string apply(string target,vector<int>& table){
+    string apply(const string& target,vector<int>& table){
         string res = "";
         vector<int> temp = table;
 
@@ -11,7 +11,7 @@ public:
         sort(res.begin(), res.end());
         return res;
     }
-    int gen(string target, vector<vector<int>>& table, unordered_map<string, int>& dp){
+    int gen(const string& target, vector<vector<int>>& table, unordered_map<string, int>& dp){
         if (target == "") return 0;
         if (dp.find(target) != dp.end()) return dp[target];
         char focus = target[0];
@@ -35,7 +35,7 @@ public:
             for (char c: s) hash[c-'a']++;
             table.push_back(hash);
         }
-
+        sort(target.begin(), target.end());
         unordered_map<string, int> dp;
         return gen(target, table, dp);
     }
