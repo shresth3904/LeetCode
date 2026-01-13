@@ -21,7 +21,7 @@ public:
             total_area += (double)sq[2]*sq[2];
         }
         double low = minY, high = maxY;
-        for (int i = 0; i < 100; i++){
+        for (int i = 0; i < 50; i++){
             double mid = low + (high - low)/2.0;
             if (getAreabelow(squares, mid) < total_area/2.0) low = mid;
             else high = mid;
