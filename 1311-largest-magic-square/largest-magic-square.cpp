@@ -24,9 +24,7 @@ public:
         int n = grid[0].size();
 
         int len = min(m, n);
-        int max_side = 1;
         for (int k = len; k >= 2; k--){
-            
             for (int i = 0; i <= m-k; i++){
                 bool flag = false;
                 for (int j = 0; j <= n -k; j++){
@@ -37,6 +35,6 @@ public:
             }
         }
 
-        return max_side;
+        return 1;
     }
 };
