@@ -25,18 +25,15 @@ public:
 
         int len = min(m, n);
         int max_side = 1;
-        for (int k = 2; k <= len; k++){
+        for (int k = len; k >= 2; k--){
             
             for (int i = 0; i <= m-k; i++){
                 bool flag = false;
                 for (int j = 0; j <= n -k; j++){
                     if (verify(grid, k, i, j)) {
-                        flag = true;
-                        max_side = k;
-                        break;
+                        return k;
                     }
                 }
-                if (flag) break;
             }
         }
 
