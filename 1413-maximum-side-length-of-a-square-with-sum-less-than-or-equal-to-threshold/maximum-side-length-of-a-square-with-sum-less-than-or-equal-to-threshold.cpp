@@ -11,7 +11,6 @@ public:
             sum += mat[0][i];
             res[0][i] = sum;
         }
-
         for (int i = 1; i < mat.size(); i++){
             for (int j = 1; j < mat[0].size(); j++){
                 res[i][j] = res[i-1][j] + res[i][j-1] - res[i-1][j-1] + mat[i][j];
@@ -40,13 +39,9 @@ public:
     int maxSideLength(vector<vector<int>>& mat, int threshold) {
         int m = mat.size();
         int n = mat[0].size();
-
         int len = min(m, n);
-
         vector<vector<int>> res(m, vector<int>(n, 0));
         prefixSum(mat, res);
-
-
         int left = 1, right = len;
         int out = 0;
         while (left <= right){
@@ -55,8 +50,7 @@ public:
                 out = k;
                 left = k+1;
             }
-            else right = k -1;
-            
+            else right = k -1;       
         }
 
         return out;
