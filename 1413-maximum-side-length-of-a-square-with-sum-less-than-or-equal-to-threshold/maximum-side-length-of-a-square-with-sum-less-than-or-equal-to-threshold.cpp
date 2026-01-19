@@ -28,6 +28,19 @@ public:
 
         return big_sq + corner - side_sq - upper_sq; 
     }
+
+    bool isValid(vector<vector<int>>& res, int k, int threshold){
+        int m = res.size();
+        int n = res[0].size();
+        if (k == 0) return false;
+        for (int i = 0; i <= m-k; i++){
+            for (int j = 0; j <= n-k; j++){
+                if (findSum(res, i, j, k-1) <= threshold) return true;
+            }
+        }
+
+        return false;
+    }
     int maxSideLength(vector<vector<int>>& mat, int threshold) {
         int m = mat.size();
         int n = mat[0].size();
@@ -38,14 +51,18 @@ public:
         prefixSum(mat, res);
 
 
-        for (int k = len; k > 0; k--){
-            for (int i = 0; i <= m-k; i++){
-                for (int j = 0; j <= n-k; j++){
-                    if (findSum(res, i, j, k-1) <= threshold) return k;
-                }
+        int left = 1, right = len;
+        int out = 0;
+        while (left <= right){
+            int k = left + (right - left)/2;
+            if (isValid(res, k, threshold)){
+                out = k;
+                left = k+1;
             }
+            else right = k -1;
+            
         }
 
-        return 0;
+        return out;
     }
 };
