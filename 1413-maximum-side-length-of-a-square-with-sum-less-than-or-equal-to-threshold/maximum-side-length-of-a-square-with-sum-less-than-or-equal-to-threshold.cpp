@@ -35,7 +35,13 @@ public:
         if (k == 0) return false;
         for (int i = 0; i <= m-k; i++){
             for (int j = 0; j <= n-k; j++){
-                if (findSum(res, i, j, k-1) <= threshold) return true;
+                int big_sq = res[i+k-1][j+k-1];
+                int upper_sq = (i > 0)? res[i-1][j+k-1]: 0;
+                int side_sq = (j > 0)? res[i+k-1][j-1]: 0;
+                int corner = (i > 0 && j > 0)? res[i-1][j-1]: 0;
+
+                int total =  big_sq + corner - side_sq - upper_sq;
+                if (total <= threshold) return true;
             }
         }
 
