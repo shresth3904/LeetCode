@@ -19,16 +19,6 @@ public:
         }
     }
 
-
-    int findSum(vector<vector<int>>& res, int row, int col, int k){
-        int big_sq = res[row+k][col+k];
-        int upper_sq = (row > 0)? res[row-1][col+k]: 0;
-        int side_sq = (col > 0)? res[row+k][col-1]: 0;
-        int corner = (row > 0 && col > 0)? res[row-1][col-1]: 0;
-
-        return big_sq + corner - side_sq - upper_sq; 
-    }
-
     bool isValid(vector<vector<int>>& res, int k, int threshold){
         int m = res.size();
         int n = res[0].size();
