@@ -1,30 +1,57 @@
+struct node{
+    int data;
+    node* prev;
+    node* next;
+    node(int val){
+        data = val;
+        prev = nullptr;
+        next = nullptr;
+    }
+};
+
 class Solution {
 public:
     int minimumPairRemoval(vector<int>& nums) {
-        int count = 0;
+        node* head = new node(nums[0]);
+        node* curr = head;
+        for (int i = 1; i < nums.size(); i++){
+            node* temp = new node(nums[i]);
+            curr->next = temp;
+            temp->prev = curr;
 
-        while (nums.size() > 1){
+            curr = curr->next;
+        }
+        int count = 0;
+        while (head -> next != nullptr){
             int minSum = INT_MAX;
-            int t = -1;
+            node* target = nullptr;
             bool sorted = true;
-            for (int i = 0; i < nums.size()-1; i++){
-                int sum = nums[i] + nums[i+1];
-                if (sum < minSum) {
+
+            node* curr = head;
+            while (curr->next){
+                int sum = curr->data + curr->next->data;
+                if (sum < minSum){
                     minSum = sum;
-                    t = i;
+                    target = curr;
                 }
 
-                if (nums[i] > nums[i+1]) sorted = false;
-
+                if (curr->data > curr->next->data) sorted = false;
+                curr = curr->next;
             }
 
             if (sorted) break;
 
-            nums[t] = minSum;
-            nums.erase(nums.begin() + t + 1);
+            if (target){target-> data = minSum;
+            node* req = target->next->next;
+            delete target->next;
+
+            if (req) {
+                req->prev = target;
+            }
+            target->next = req;
+            }
             count++;
         }
-
 
         return count;
     }
