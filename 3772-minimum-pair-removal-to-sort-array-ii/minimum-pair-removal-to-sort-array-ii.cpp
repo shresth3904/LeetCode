@@ -1,123 +1,82 @@
-#include <vector>
-#include <queue>
-
-using namespace std;
-
-struct Node {
-    long long value;
+struct node{
+    long long val;
     int index;
-    Node* prev;
-    Node* next;
-    bool valid;
-    int version;
-
-    Node(long long v, int idx) : value(v), index(idx), prev(nullptr), next(nullptr), valid(true), version(0) {}
+    node* prev;
+    node* next;
+    bool valid = true;
+    node(int data, int i){
+        index = i;
+        val = data;
+        prev = nullptr;
+        next = nullptr;
+    }
 };
 
-struct Pair {
-    long long sum;
-    int index;
-    Node* leftNode;
-    Node* rightNode;
-    int leftVersion;
-    int rightVersion;
+typedef pair<long long, node*> Pair;
 
-    bool operator>(const Pair& other) const {
-        if (sum != other.sum) {
-            return sum > other.sum;
+struct compare{
+    bool operator()(const Pair& a, const Pair& b){
+        if (a.first != b.first){
+            return a.first > b.first;
         }
-        return index > other.index;
+        return a.second->index > b.second->index;
     }
 };
 
 class Solution {
 public:
     int minimumPairRemoval(vector<int>& nums) {
-        int n = nums.size();
-        if (n < 2) return 0;
+        priority_queue<Pair, vector<Pair>, compare> min_heap;
+        node* head = new node(nums[0], 0);
+        node* curr = head;
+        int bad_pair = 0;
 
-        vector<Node*> nodes;
-        nodes.reserve(n);
-        
-        Node* head = new Node(nums[0], 0);
-        nodes.push_back(head);
-        Node* curr = head;
-        int inversionCount = 0;
-
-        priority_queue<Pair, vector<Pair>, greater<Pair>> pq;
-
-        for (int i = 1; i < n; i++) {
-            Node* newNode = new Node(nums[i], i);
-            nodes.push_back(newNode);
+        for (int i = 1; i < nums.size(); i++){
+            node* temp = new node(nums[i], i);
+            temp->prev = curr;
+            curr->next = temp;
+            long long sum = (long long) curr->val + temp->val;
+            min_heap.push({sum, curr});
+            if (curr->val > temp->val) bad_pair++;
+            curr = curr->next;
+        }
+        int count = 0;
+        while (bad_pair > 0){
+            auto top_ele = min_heap.top();
+            min_heap.pop();
             
-            curr->next = newNode;
-            newNode->prev = curr;
+            //checking dead pairs
+            if (!top_ele.second->valid ||!top_ele.second->next || !top_ele.second->next->valid || 
+                (top_ele.first != (long long)top_ele.second->val + top_ele.second->next->val)) 
+                continue;
 
-            if (curr->value > newNode->value) {
-                inversionCount++;
-            }
+            // bad_pairs calc
+            node* first = top_ele.second;
+            node* second = first->next;
 
-            pq.push({curr->value + newNode->value, i - 1, curr, newNode, 0, 0});
-            curr = newNode;
+            if (first->prev && first->prev->val > first->val) bad_pair--;
+            if (first->val > second->val) bad_pair--;
+            if (second->next && second->val > second->next->val) bad_pair--;
+
+            //merging and recalulating bad pairs
+            first->val = top_ele.first;
+            first->next = second->next;
+            if (second->next) second->next->prev = first;
+            second-> valid = false;
+
+            //recalculation
+
+            if (first->prev && first->prev->val > first->val) bad_pair++;
+            if (first->next && first->val > first->next->val) bad_pair++;
+
+            //adding pairs in min_heap
+
+            if (first->prev) min_heap.push({(long long)first->prev->val + first->val, first->prev});
+            if (first->next) min_heap.push({(long long)first->val + first->next->val, first});
+            
+            count++;
         }
 
-        if (inversionCount == 0) return 0;
-
-        int operations = 0;
-
-        while (inversionCount > 0 && !pq.empty()) {
-            Pair top = pq.top();
-            pq.pop();
-
-            Node* left = top.leftNode;
-            Node* right = top.rightNode;
-
-            if (!left->valid || !right->valid) continue;
-            if (left->next != right) continue;
-            if (left->version != top.leftVersion || right->version != top.rightVersion) continue;
-
-            if (left->value > right->value) inversionCount--;
-            if (left->prev && left->prev->value > left->value) inversionCount--;
-            if (right->next && right->value > right->next->value) inversionCount--;
-
-            long long newSum = left->value + right->value;
-            
-            left->value = newSum;
-            left->version++;
-            left->next = right->next;
-            
-            if (right->next) {
-                right->next->prev = left;
-            }
-            
-            right->valid = false;
-            operations++;
-
-            if (left->prev && left->prev->value > left->value) inversionCount++;
-            if (left->next && left->value > left->next->value) inversionCount++;
-
-            if (inversionCount == 0) break;
-
-            if (left->prev) {
-                pq.push({left->prev->value + left->value, 
-                         left->prev->index, 
-                         left->prev, 
-                         left, 
-                         left->prev->version, 
-                         left->version
-                });
-            }
-            if (left->next) {
-                pq.push({left->value + left->next->value, 
-                         left->index, 
-                         left, 
-                         left->next, 
-                         left->version, 
-                         left->next->version
-                });
-            }
-        }
-
-        return operations;
+        return count;
     }
 };
