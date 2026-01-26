@@ -1,22 +1,46 @@
+struct node{
+    int val;
+    int key;
+    node* prev;
+    node* next;
+
+    node(int a, int b){
+        val = a;
+        key = b;
+    }
+};
+
 class LRUCache {
-    int cap;
-    unordered_map<int, int> hash;
-    vector<int> q;
 public:
+
+    node* head = nullptr; 
+    node* tail = nullptr;
+    unordered_map<int, node*> hash;
+    int cap;
+
     LRUCache(int capacity) {
         cap = capacity;
     }
     
     int get(int key) {
         if (hash.find(key) != hash.end()){
-            for (int i = 0; i < q.size(); i++){
-                if (q[i] == key){
-                    q.erase(q.begin() + i);
-                    break;
-                }
+            if (hash[key] == tail){
+                return hash[key]->val;
             }
-            q.push_back(key);
-            return hash[key];
+            else if (hash[key] == head){
+                head = head->next;
+                head->prev = nullptr;
+            }
+            else {
+                hash[key]->prev->next = hash[key]->next;
+                hash[key]->next->prev = hash[key]->prev;
+            }
+
+            tail->next = hash[key];
+            hash[key]->next = nullptr;
+            hash[key]->prev = tail;
+            tail = tail->next;
+            return hash[key]->val;
         }
 
         return -1;
@@ -24,20 +48,53 @@ public:
     
     void put(int key, int value) {
         if (hash.find(key) != hash.end()){
-            for (int i = 0; i < q.size(); i++){
-                if (q[i] == key){
-                    q.erase(q.begin() + i);
-                    break;
-                }
+            hash[key]->val = value;
+            if (hash[key] == tail){
+                return;
             }
-        }
-        else if (hash.size() >= cap){
-            hash.erase(q[0]);
-            q.erase(q.begin() + 0);
+            else if (hash[key] == head){
+                head = head->next;
+                head->prev = nullptr;
+            }
+            else {
+                hash[key]->prev->next = hash[key]->next;
+                hash[key]->next->prev = hash[key]->prev;
+            }
+
+            tail->next = hash[key];
+            hash[key]->next = nullptr;
+            hash[key]->prev = tail;
+            tail = tail->next;
+            return;
         }
 
-        hash[key] = value;
-        q.push_back(key);
+        if (hash.size() >= cap) {
+            node* temp = head;
+            hash.erase(temp->key);
+            if (head == tail){ 
+                tail = nullptr;
+                head = nullptr;
+            }
+            else {
+                head = head->next;
+                head->prev = nullptr;
+            }
+            delete temp;
+        }
+
+        node* temp = new node(value, key);
+        if (!head){
+            head = temp;
+            tail = temp;
+        }
+
+        else {
+            tail->next = temp;
+            temp->prev = tail;
+            tail = tail->next;
+        }
+
+        hash[key] = temp;
     }
 };
 
