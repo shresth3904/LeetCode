@@ -1,35 +1,22 @@
 class Solution {
 public:
-    string addOne(string s){
-        int n = s.size();
-        for (int i = n-1; i >= 0; i--){
-            if (s[i] == '0'){
-                s[i] = '1';
-                return s;
-            }
-
-            else {
-                s[i] = '0';
-            }
-        }
-
-        return '1' + s;
-    }
     int numSteps(string s) {
         int n = s.size();
-        int count = 0;
+        int carry = 0;
+        int steps = 0;
 
-        while (s != "1"){
-            count++;
-            if (s.back() == '1'){
-                s = addOne(s);
+        for (int i = n-1; i > 0; i--){
+            int curr = (s[i]-'0') + carry;
+            if (curr == 1){
+                steps += 2;
+                carry = 1;
             }
 
             else {
-                s.pop_back();
+                steps += 1;
             }
         }
 
-        return count;
+        return steps + carry;
     }
 };
