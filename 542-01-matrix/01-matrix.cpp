@@ -28,7 +28,7 @@ public:
                     int sr = top.first + d[0];
                     int sc = top.second + d[1];
 
-                    if (sr >= 0 && sc >= 0 && sr < m && sc < n && mat[sr][sc] == 1 && res[sr][sc] == -1){
+                    if (sr >= 0 && sc >= 0 && sr < m && sc < n && res[sr][sc] == -1){
                         q.push({sr, sc});
                         res[sr][sc] = 1 + res[top.first][top.second];
                     }
