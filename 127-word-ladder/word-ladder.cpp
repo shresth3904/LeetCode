@@ -1,17 +1,8 @@
 class Solution {
 public:
-    bool match(string a, string b){
-        int n = a.size();
-        int count = 0;
-        for (int i = 0; i < n; i++){
-            if (a[i] != b[i]) count++;
-            if (count > 1) return false;
-        }
-
-        return (count == 1)? true: false;
-    }
-
     int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+        unordered_set<string> s(wordList.begin(), wordList.end());
+
         queue<string> q;
         int n = wordList.size();
         q.push(beginWord);
@@ -23,14 +14,20 @@ public:
             for (int z = 0; z < k; z++){
                 string top = q.front();
                 q.pop();
+                if (top == endWord) return length;
+                for (int i = 0; i < top.size(); i++){
+                    char ori = top[i];
 
-                for (int i = 0; i < n; i++){
-                    if (visited[i]) continue;
-                    if (match(wordList[i], top)){
-                        if (wordList[i] == endWord) return length+1;
-                        q.push(wordList[i]);
-                        visited[i] = true;
+                    for (char c = 'a'; c <= 'z'; c++){
+                        if (c == ori) continue;
+                        top[i] = c;
+                        if (s.find(top) != s.end()){
+                            q.push(top);
+                            s.erase(top);
+                        }
                     }
+
+                    top[i] = ori;
                 }
             }
 
