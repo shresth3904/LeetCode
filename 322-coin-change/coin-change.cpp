@@ -18,7 +18,7 @@ public:
     }
     int coinChange(vector<int>& coins, int amount) {
         vector<int> dp(amount+1, -2);
-
+        sort(coins.begin(), coins.end());
         return gen(coins, amount, dp);
     }
 };
