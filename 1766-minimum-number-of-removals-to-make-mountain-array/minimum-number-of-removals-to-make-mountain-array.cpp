@@ -18,7 +18,7 @@ public:
         }
 
         int max_m = 1;
-        for (int i = 0; i < n; i++){
+        for (int i = 1; i < n-1; i++){
             if (dp_left[i] > 1 && dp_right[i] > 1) max_m = max(max_m, dp_left[i] + dp_right[i]);
         }
 
