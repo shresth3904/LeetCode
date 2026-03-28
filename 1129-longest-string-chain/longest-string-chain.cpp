@@ -27,7 +27,8 @@ public:
 
         int max_m = 1;
         for (int i = 1; i < n; i++){
-            for (int j = 0; j < i; j++){
+            for (int j = i-1; j >= 0; j--){
+                if (words[i].size() - words[j].size() > 1) break;
                 if (isvalid(words[j], words[i])){
                     dp[i] = max(dp[i], dp[j] + 1);
                 }
