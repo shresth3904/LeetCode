@@ -1,18 +1,24 @@
 class Solution {
 public:
-    int gen(vector<vector<int>>& grid,int m, int n, vector<vector<int>>& dp){
-        if (m == 0 || n == 0) return 0;
-        if (grid[m-1][n-1] == 1) return 0;
-        if (m == 1 && n == 1) return 1;
+    int uniquePathsWithObstacles(vector<vector<int>>& grid) {
+        int m = grid.size();
+        int n = grid[0].size();
 
-        if (dp[m][n] != -1) return dp[m][n];
-        dp[m][n] = gen(grid, m-1, n, dp) + gen(grid, m, n-1, dp);
-        return dp[m][n];
-    }
-    int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
-        int m = obstacleGrid.size();
-        int n = obstacleGrid[0].size();
-        vector<vector<int>> dp(m+1, vector<int> (n+1, -1));
-        return gen(obstacleGrid, m, n, dp);
+        vector<int> dp(n, 0);
+        vector<int> dp2(n, 0);
+
+        dp[0] = (grid[0][0] == 1)? 0: 1;
+        for (int i = 1; i < n; i++) dp[i] = (grid[0][i] == 1)? 0: dp[i-1];
+
+        for (int i = 1; i < m; i++){
+            dp2[0] = (grid[i][0] == 1)? 0: dp[0]; 
+            for (int j = 1; j < n; j++){
+                dp2[j] = (grid[i][j] == 1)? 0:dp2[j-1] + dp[j];
+            }
+
+            dp.swap(dp2);
+        }
+
+        return dp[n-1];
     }
 };
