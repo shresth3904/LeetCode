@@ -9,17 +9,17 @@ public:
         q.push_back(0);
         int ans = dp[0];
         for (int i = 1; i< n; i++){
+            while (!q.empty() && i - q.front() > k){
+                q.pop_front();
+            }
+            
             dp[i] = max(nums[i] + dp[q.front()], nums[i]);
 
-            while (!q.empty() && dp[q.back()] < dp[i]){
+            while (!q.empty() && dp[q.back()] <= dp[i]){
                 q.pop_back();
             }
 
             q.push_back(i);
-
-            while (!q.empty() && i - q.front() >= k){
-                q.pop_front();
-            }
 
             ans = max(ans, dp[i]);
         }
